@@ -6,31 +6,31 @@
   <h1>Add User Form</h1>
 
   {{ form_start(form) }}
-      {{ form_widget(form) }}
-      <input type="submit" value="Add User">
+    {{ form_widget(form) }}
+    <input type="submit" value="Add User">
   {{ form_end(form) }}
 
   <h1>User List</h1>
 
     <table>
-        <thead>
-            <tr>
-                <th>User</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
+      <thead>
+        <tr>
+          <th>User</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
         <tbody>
-            {% for user in users %}
-                <tr>
-                    <td>{{ user.firstName }} {{ user.lastName }}, {{ user.address }}</td>
-                    <td>
-                      <form action="{{ path('user_delete', {'id': user.id}) }}" method="post" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this user?');">
-                        <input type="hidden" name="_method" value="DELETE">
-                        <input type="submit" value="Delete">
-                      </form>
-                    </td>
-                </tr>
-            {% endfor %}
+          {% for user in users %}
+            <tr>
+              <td>{{ user.firstName }} {{ user.lastName }}, {{ user.address }}</td>
+              <td>
+                <form action="{{ path('user_delete', {'id': user.id}) }}" method="post" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this user?');">
+                  <input type="hidden" name="_method" value="DELETE">
+                  <input type="submit" value="Delete">
+                </form>
+              </td>
+            </tr>
+          {% endfor %}
         </tbody>
     </table>
 {% endblock %}
