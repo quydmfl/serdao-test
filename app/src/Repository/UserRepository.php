@@ -5,15 +5,18 @@ namespace App\Repository;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use App\Entity\User;
+use Symfony\Component\DependencyInjection\Attribute\When;
 
-class UserRepository extends ServiceEntityRepository
+#[When(env: 'dev')]
+#[When(env: 'prod')]
+class UserRepository extends ServiceEntityRepository implements UserRepositoryInterface
 {
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, User::class);
     }
 
-    public function findAllUsers()
+    public function findAllUsers(): array
     {
         return $this->createQueryBuilder('u')
             ->select('u.id', 'u.firstName', 'u.lastName', 'u.address')
@@ -21,7 +24,7 @@ class UserRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function addUser(string $firstName, string $lastName, string $address)
+    public function addUser(string $firstName, string $lastName, string $address): ?User
     {
         $entityManager = $this->getEntityManager();
 
@@ -32,9 +35,11 @@ class UserRepository extends ServiceEntityRepository
 
         $entityManager->persist($user);
         $entityManager->flush();
+
+        return $user;
     }
 
-    public function updateUser(int $id, string $firstName, string $lastName, string $address)
+    public function updateUser(int $id, string $firstName, string $lastName, string $address): ?User
     {
         $entityManager = $this->getEntityManager();
         $user = $this->find($id);
@@ -45,9 +50,11 @@ class UserRepository extends ServiceEntityRepository
             $user->setAddress($address);
             $entityManager->flush();
         }
+
+        return $user;
     }
 
-    public function deleteUserById(int $id)
+    public function deleteUserById(?int $id): bool
     {
         $entityManager = $this->getEntityManager();
         $user = $this->find($id);
@@ -55,6 +62,10 @@ class UserRepository extends ServiceEntityRepository
         if ($user) {
             $entityManager->remove($user);
             $entityManager->flush();
+
+            return true;
         }
+
+        return false;
     }
 }
