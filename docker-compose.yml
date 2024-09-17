@@ -1,4 +1,4 @@
-version: '2'
+version: "2"
 
 services:
   mariadb:
@@ -8,11 +8,11 @@ services:
       - MARIADB_USER=symfony
       - MARIADB_DATABASE=symfony
     ports:
-      - '3306:3306'
+      - "3306:3306"
   symfony:
     image: docker.io/bitnami/symfony:6.3
     ports:
-      - '8000:8000'
+      - "8000:8000"
     environment:
       - ALLOW_EMPTY_PASSWORD=yes
       - SYMFONY_DATABASE_HOST=mariadb
@@ -21,6 +21,6 @@ services:
       - SYMFONY_DATABASE_NAME=symfony
       - SYMFONY_PROJECT_SKELETON=symfony/skeleton
     volumes:
-      - './app:/app'
+      - "./app:/app"
     depends_on:
       - mariadb

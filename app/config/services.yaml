@@ -19,11 +19,18 @@ services:
       - "../src/DependencyInjection/"
       - "../src/Entity/"
       - "../src/Kernel.php"
-      - "../src/Repository/"
+
+  # Include controllers and repositories explicitly
   App\Controller\:
     resource: "../src/Controller"
     tags: ["controller.service_arguments"]
 
+  App\Repository\UserRepository:
+    autowire: true
+    autoconfigure: true
+
   # Explicitly include the repositories
   App\Repository\:
     resource: "../src/Repository"
+    autowire: true
+    autoconfigure: true
