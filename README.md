@@ -4,18 +4,30 @@ Initial project [requirements](requirement.md) and assuming that it is a small s
 
 I will proceed to refactor the code. I have changed the project code [structure](#structure) below. I will explain a little bit about my idea in updating the code.
 
-First, I don't want the database connection, table creation, and data seeding to be handled in the controllers. It doesn't make sense and it's hard to maintain.
+First, I don't want the database connection, table creation, data seeding, biz to be handled in the controllers. It doesn't make sense and it's hard to maintain.
 
-Second, the view template I decided not to change the way it works. However, I see it uses forms so I will change them to make it more suitable.
+- I use [DoctrineMigrationsBundle](https://symfony.com/bundles/DoctrineMigrationsBundle/current/index.html) to [create table](app/migrations/) structures.
+- I use [DoctrineFixturesBundle](https://symfony.com/bundles/DoctrineFixturesBundle/current/index.html) to create [fake data](app/src/DataFixtures/UserFixtures.php).
+- I use [Form](https://symfony.com/doc/6.3/form/without_class.html#adding-validation) with [Validation](https://symfony.com/doc/6.3/validation.html) to validate data before User. You can to define another rule in [UserType.php](app/src/Form/UserType.php)
+- I created a [UseCase](app/src/UseCase/) folder to contain the project's business logic.
+- In [Repository](app/src/Repository/) folder:
+  - [Faker](app/src/Repository/Fake/): This file contains a fake implementation of the interface. It's used for testing purposes and does not interact with any actual data storage mechanism.
+  - [UserRepository.php](app/src/Repository/UserRepository.php): This file contains the actual implementation of the [UserRepositoryInterface](app/src/Repository/UserRepositoryInterface.php) interface. It is responsible for interacting with the database to store and retrieve user data.
+  - [UserRepositoryInterface](app/src/Repository/UserRepositoryInterface.php): This file contains the interface that defines the methods that the [UserRepository.php](app/src/Repository/UserRepository.php) class should implement.
 
-Third, I wrote some tests to check the processing logic.
+Second, the [view template](app/templates/user/index.html.twig) I decided not to change the way it works. However, I see it uses forms so I will change them to make it more suitable.
+
+Third, I wrote some [tests](app/tests/) to check the processing logic. You can run it with the command below after the project has successfully started.
+
+```
+docker compose exec -ti symfony bash -c "php bin/phpunit"
+```
 
 Finally, I have a few things I would like to do if the system is actually running:
 
-- Assuming that the number of data queries increases. I think we can think about applying the CQRS pattern (Command and Query Responsibility Segregation) combined with the Master-Slave model for the Database to increase the load capacity of the system.
--
+- Currently, we don't have specific validation data for each input so I just validator not empty for that. However, in reality we will need more validations than that. We can think about using [Mapping Request Data to Typed Objects](https://symfony.com/blog/new-in-symfony-6-3-mapping-request-data-to-typed-objects).
 
-## Steps to make adjustments
+- Assuming that the number of data queries increases. I think we can think about applying the CQRS pattern ([Command and Query Responsibility Segregation](https://martinfowler.com/bliki/CQRS.html)) combined with the Master-Slave model for the Database to increase the load capacity of the system. Besides, you can also think about caching system and infrastructure rules to prevent unwanted requests.
 
 ## Structure
 
@@ -311,3 +323,5 @@ DoctrineMigrations\Version20240916134400
 # Verifying installation
 
 Open <http://localhost:8000>, you should be greeted with "Welcome to Symfony 6.3.4".
+
+Open <http://localhost:8000/user>, you will see the application interface.
