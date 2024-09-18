@@ -6,7 +6,6 @@ use Symfony\Component\HttpFoundation\Request;
 
 class UserControllerTest extends KernelTestCase
 {
-
   public function testShowFormAdd(): void
   {
     $kernel = self::bootKernel();

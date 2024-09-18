@@ -14,13 +14,6 @@ use App\UseCase\User\IndexUseCase;
 
 class UserController extends AbstractController
 {
-    private $userRepository;
-
-    public function __construct(UserRepository $userRepository)
-    {
-        $this->userRepository = $userRepository;
-    }
-
     #[Route('/user', name: 'user_index', methods: ['GET', 'POST'])]
     public function index(Request $request, IndexUseCase $indexUseCase, AddUseCase $addUseCase)
     {
@@ -44,8 +37,13 @@ class UserController extends AbstractController
     public function delete(int $id, DeleteUseCase $deleteUseCase)
     {
         if ($deleteUseCase($id)) {
+            // Deletion failed, set a flash message
+            $this->addFlash('success', 'User deletion success.');
             return $this->redirectToRoute('user_index');
         };
+
+        // Deletion failed, set a flash message
+        $this->addFlash('error', 'User deletion failed.');
 
         return $this->redirectToRoute('user_index'); // Remove to show error
     }
