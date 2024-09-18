@@ -3,7 +3,6 @@ namespace App\Tests\Integration\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 class UserControllerTest extends KernelTestCase
 {
@@ -11,9 +10,23 @@ class UserControllerTest extends KernelTestCase
   public function testShowFormAdd(): void
   {
     $kernel = self::bootKernel();
-    $fakeRequest = Request::create('/user', 'POST');
 
-    $response = $kernel->handle($fakeRequest, HttpKernelInterface::MAIN_REQUEST, false);
+    // Create a fake request with form data
+    $formData = [
+        'user' => [
+            'firstName' => 'John',
+            'lastName' => 'Doe',
+            'address' => '123 Main St',
+        ],
+    ];
+
+    $fakeRequest = Request::create('/user', 'POST', $formData);
+
+    // Handle the request
+    $response = $kernel->handle($fakeRequest);
+
+    // Assert that the response is a redirect to the 'user_index' route
     $this->assertEquals(302, $response->getStatusCode());
+    $this->assertEquals('/user', $response->headers->get('Location'));
   }
 }
