@@ -23,6 +23,18 @@ Third, I wrote some [tests](app/tests/) to check the processing logic. You can r
 docker compose exec -ti symfony bash -c "php bin/phpunit"
 ```
 
+Result:
+
+```
+docker compose exec -ti symfony bash -c "php bin/phpunit"
+PHPUnit 9.6.20 by Sebastian Bergmann and contributors.
+
+Testing 
+.....                                                               5 / 5 (100%)
+
+Time: 00:00.313, Memory: 22.00 MB
+```
+
 Finally, I have a few things I would like to do if the system is actually running:
 
 - Currently, we don't have specific validation data for each input so I just validator not empty for that. However, in reality we will need more validations than that. We can think about using [Mapping Request Data to Typed Objects](https://symfony.com/blog/new-in-symfony-6-3-mapping-request-data-to-typed-objects).
